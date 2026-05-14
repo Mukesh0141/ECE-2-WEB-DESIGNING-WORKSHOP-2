@@ -1,266 +1,269 @@
 import React, { useEffect, useState } from "react";
+
 function App() {
-  // Form Data State
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
-  });
-  // Error State
+  // Form State
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState({});
-  // Success Message State
   const [success, setSuccess] = useState("");
-  // API Users State
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // API State
   const [users, setUsers] = useState([]);
-  // Loading State
   const [loading, setLoading] = useState(true);
-  // useEffect for API Fetching
+  const [apiError, setApiError] = useState("");
+
+  // Fetch API Data using async/await and error handling
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/users");
+        if (!response.ok) throw new Error("Failed to fetch users");
+        const data = await response.json();
         setUsers(data);
+      } catch (err) {
+        setApiError(err.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    
+    fetchUsers();
   }, []);
+
   // Handle Input Changes
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear errors and success messages when user starts typing
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (success) setSuccess("");
   };
+
   // Form Validation Function
   const validateForm = () => {
-    let newErrors = {};
-    // Name Validation
-    if (formData.name.trim() === "") {
-      newErrors.name = "Name is required";
-    }
-    // Email Validation
-    if (!formData.email.includes("@")) {
-      newErrors.email = "Email must contain @";
-    }
-    // Password Validation
-    if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!emailRegex.test(formData.email)) newErrors.email = "Please enter a valid email address";
+    if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+
     return newErrors;
   };
+
   // Form Submit Function
   const handleSubmit = (event) => {
     event.preventDefault();
     const validationErrors = validateForm();
-    // If Validation Errors Exist
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setSuccess("");
     } else {
-      setErrors({});
-      setSuccess("Registration Successful!");
-      console.log(formData);
-      // Clear Form Fields
-      setFormData({
-        name: "",
-        email: "",
-        password: ""
-      });
+      setIsSubmitting(true);
+      
+      // Simulate API call delay for form submission
+      setTimeout(() => {
+        setErrors({});
+        setSuccess("Registration Successful!");
+        console.log("Submitted Data:", formData);
+        
+        // Reset Form
+        setFormData({ name: "", email: "", password: "" });
+        setIsSubmitting(false);
+      }, 1000);
     }
   };
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f0f2f5",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "20px",
-        fontFamily: "Arial"
-      }}
-    >
-      <div
-        style={{
-          width: "400px",
-          backgroundColor: "white",
-          padding: "30px",
-          borderRadius: "10px",
-          boxShadow: "0px 0px 10px rgba(0,0,0,0.2)"
-        }}
-      >
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "20px"
-          }}
-        >
-          Registration Form
-        </h1>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1 style={styles.header}>Registration Form</h1>
+
         {/* Registration Form */}
         <form onSubmit={handleSubmit}>
-          {/* Name Input */}
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter Name"
-            value={formData.name}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginBottom: "5px",
-              borderRadius: "5px",
-              border: "1px solid gray"
-            }}
-          />
-          {
-            errors.name && (
-              <p
-                style={{
-                  color: "red",
-                  marginTop: "0px"
-                }}
-              >
-                {errors.name}
-              </p>
-            )
-          }
-          {/* Email Input */}
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter Email"
-            value={formData.email}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginTop: "10px",
-              marginBottom: "5px",
-              borderRadius: "5px",
-              border: "1px solid gray"
-            }}
-          />
-          {
-            errors.email && (
-              <p
-                style={{
-                  color: "red",
-                  marginTop: "0px"
-                }}
-              >
-                {errors.email}
-              </p>
-            )
-          }
-          {/* Password Input */}
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            value={formData.password}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "10px",
-              marginTop: "10px",
-              marginBottom: "5px",
-              borderRadius: "5px",
-              border: "1px solid gray"
-            }}
-          />
-          {
-            errors.password && (
-              <p
-                style={{
-                  color: "red",
-                  marginTop: "0px"
-                }}
-              >
-                {errors.password}
-              </p>
-            )
-          }
-          {/* Submit Button */}
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginTop: "20px",
-              backgroundColor: "blue",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontSize: "16px"
-            }}
+          
+          <div style={styles.inputGroup}>
+            <label style={styles.label} htmlFor="name">Full Name</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              placeholder="e.g., Jane Doe"
+              value={formData.name}
+              onChange={handleChange}
+              style={{ ...styles.input, borderColor: errors.name ? "red" : "#ccc" }}
+            />
+            {errors.name && <span style={styles.errorText}>{errors.name}</span>}
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label style={styles.label} htmlFor="email">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="e.g., jane@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              style={{ ...styles.input, borderColor: errors.email ? "red" : "#ccc" }}
+            />
+            {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label style={styles.label} htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Enter at least 6 characters"
+              value={formData.password}
+              onChange={handleChange}
+              style={{ ...styles.input, borderColor: errors.password ? "red" : "#ccc" }}
+            />
+            {errors.password && <span style={styles.errorText}>{errors.password}</span>}
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={isSubmitting} 
+            style={{ ...styles.button, opacity: isSubmitting ? 0.7 : 1 }}
           >
-            Register
+            {isSubmitting ? "Registering..." : "Register"}
           </button>
         </form>
+
         {/* Success Message */}
-        {
-          success && (
-            <p
-              style={{
-                color: "green",
-                textAlign: "center",
-                marginTop: "15px",
-                fontWeight: "bold"
-              }}
-            >
-              {success}
-            </p>
-          )
-        }
+        {success && <p style={styles.successText}>{success}</p>}
+
         {/* API Data Section */}
-        <div
-          style={{
-            marginTop: "30px"
-          }}
-        >
-          <h2
-            style={{
-              textAlign: "center"
-            }}
-          >
-            User Data from API
-          </h2>
-          {
-            loading ? (
-              <p
-                style={{
-                  textAlign: "center"
-                }}
-              >
-                Loading...
-              </p>
-            ) : (
-              users.map((user) => (
-                <div
-                  key={user.id}
-                  style={{
-                    backgroundColor: "#f4f4f4",
-                    padding: "10px",
-                    marginTop: "10px",
-                    borderRadius: "5px"
-                  }}
-                >
-                  <p>
-                    <strong>Name:</strong> {user.name}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {user.email}
-                  </p>
-                </div>
-              ))
-            )
-          }
+        <div style={styles.apiSection}>
+          <h2 style={styles.subHeader}>User Data from API</h2>
+          
+          {loading && <p style={styles.centerText}>Loading users...</p>}
+          {apiError && <p style={styles.errorText}>{apiError}</p>}
+          
+          <div style={styles.userList}>
+            {!loading && !apiError && users.map((user) => (
+              <div key={user.id} style={styles.userCard}>
+                <p style={styles.userText}><strong>Name:</strong> {user.name}</p>
+                <p style={styles.userText}><strong>Email:</strong> {user.email}</p>
+              </div>
+            ))}
+          </div>
         </div>
+        
       </div>
     </div>
   );
 }
+
+// Extracted Styles Object for cleaner JSX
+const styles = {
+  container: {
+    minHeight: "100vh",
+    backgroundColor: "#f0f2f5",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start", // Changed to flex-start so it scrolls well
+    padding: "40px 20px",
+    fontFamily: "Inter, Arial, sans-serif",
+  },
+  card: {
+    width: "100%",
+    maxWidth: "450px",
+    backgroundColor: "white",
+    padding: "30px",
+    borderRadius: "12px",
+    boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
+  },
+  header: {
+    textAlign: "center",
+    marginBottom: "24px",
+    color: "#333",
+    fontSize: "24px",
+  },
+  subHeader: {
+    textAlign: "center",
+    color: "#444",
+    fontSize: "20px",
+    marginBottom: "15px",
+  },
+  inputGroup: {
+    marginBottom: "16px",
+  },
+  label: {
+    display: "block",
+    marginBottom: "6px",
+    fontSize: "14px",
+    color: "#555",
+    fontWeight: "bold",
+  },
+  input: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "15px",
+    boxSizing: "border-box", // Prevents input from overflowing container
+    outline: "none",
+  },
+  errorText: {
+    color: "#e74c3c",
+    fontSize: "13px",
+    marginTop: "4px",
+    display: "block",
+  },
+  successText: {
+    color: "#2ecc71",
+    textAlign: "center",
+    marginTop: "20px",
+    fontWeight: "bold",
+    backgroundColor: "#e8f8f5",
+    padding: "10px",
+    borderRadius: "6px",
+  },
+  button: {
+    width: "100%",
+    padding: "14px",
+    marginTop: "10px",
+    backgroundColor: "#0056b3",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold",
+    transition: "background-color 0.2s",
+  },
+  apiSection: {
+    marginTop: "40px",
+    borderTop: "1px solid #eee",
+    paddingTop: "20px",
+  },
+  userList: {
+    maxHeight: "300px", // Adds a scrollbar to the user list so the page isn't too long
+    overflowY: "auto",
+    paddingRight: "5px",
+  },
+  userCard: {
+    backgroundColor: "#f8f9fa",
+    padding: "12px",
+    marginBottom: "10px",
+    borderRadius: "6px",
+    borderLeft: "4px solid #0056b3",
+  },
+  userText: {
+    margin: "4px 0",
+    fontSize: "14px",
+    color: "#333",
+  },
+  centerText: {
+    textAlign: "center",
+    color: "#666",
+  }
+};
+
 export default App;
