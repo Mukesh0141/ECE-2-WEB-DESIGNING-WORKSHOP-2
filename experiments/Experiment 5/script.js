@@ -9,7 +9,7 @@ function addEmployee() {
     employees.push(emp);
     alert("Employee added successfully!");
 }
-function displayEmployees() {
+    function displayEmployees() {
     let output = "";
 
     for (let emp of employees) {
@@ -17,7 +17,6 @@ function displayEmployees() {
     }
     document.getElementById("output").innerHTML = output;
 }
-
 function filterEmployees() {
     let result = employees.filter(emp => emp.salary > 50000);
     let output = "";
@@ -26,7 +25,6 @@ function filterEmployees() {
     }
     document.getElementById("output").innerHTML = output;
 }
-
 function totalsalary() {
     let total = 0;
     for (let emp of employees) {
@@ -34,7 +32,6 @@ function totalsalary() {
     }
     document.getElementById("output").innerHTML = "Total Salary: " + total;
 }
-
 function averageSalary() {
     let total = 0;
     
@@ -45,8 +42,6 @@ function averageSalary() {
     let avg= total / employees.length;
     document.getElementById("output").innerHTML = "Average Salary: " + avg;
 }
-
-
 function countdept() {
     let depinput = prompt("Enter department name:");
     let count = 0;

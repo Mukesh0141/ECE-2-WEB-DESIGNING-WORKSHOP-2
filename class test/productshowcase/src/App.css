@@ -1,0 +1,54 @@
+/* Container styling to match the pale yellow background */
+.showcase-container {
+  background-color: #fdfae2; /* Pale yellow */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Main Heading */
+.showcase-title {
+  color: #8b0000; /* Dark Red */
+  font-size: 2.2rem;
+  font-weight: 500;
+  margin-bottom: 40px;
+}
+
+/* Flexbox wrapper to center and wrap the cards */
+.cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 700px; /* Forces the 3rd card to drop to the next line */
+}
+
+/* Individual Card Styling */
+.product-card {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 8px;
+  padding: 20px 25px;
+  width: 260px;
+  box-sizing: border-box;
+}
+
+/* Card Heading */
+.product-card h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+/* Card Details (White text as seen in the image) */
+.product-card p {
+  color: white;
+  margin: 5px 0;
+  font-size: 1rem;
+  text-align: left;
+}

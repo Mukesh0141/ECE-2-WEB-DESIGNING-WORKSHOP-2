@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>JavaScript Loop Example</title>
+    
+</head>
+<body>
+
+    <h2>Numbers from 1 to 10</h2>
+    <div id="number-container"></div>
+    <script>
+        
+        const displayArea = document.getElementById("number-container");
+        let outputText = "";
+        for (let i = 1; i <= 10; i++) {
+            outputText += i + "<br>";
+        }
+
+        displayArea.innerHTML = outputText;
+    </script>
+
+</body>
+</html>
