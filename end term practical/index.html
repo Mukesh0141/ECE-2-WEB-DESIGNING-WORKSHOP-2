@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Armstrong Number Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+ 
+  .container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 320px;
+  }
+ 
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+ 
+  label {
+    font-size: 14px;
+    color: #555;
+  }
+ 
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+ 
+  button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+ 
+  button:hover {
+    background-color: #45a049;
+  }
+ 
+  #result {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #222;
+  }
+</style>
+</head>
+<body>
+ 
+<div class="container">
+  <h2>Armstrong Number Checker</h2>
+ 
+  <label>Enter a number: </label>
+  <input type="number" id="num">
+  <button onclick="checkArmstrong()">Check</button>
+ 
+  <h3 id="result"></h3>
+</div>
+ 
+<script>
+    function checkArmstrong() {
+      var num = Number(document.getElementById("num").value);
+ 
+      
+      var a = Math.floor(num / 100);        
+      var b = Math.floor((num / 10) % 10);  
+      var c = num % 10;                     
+ 
+      
+      var sum = (a * a * a) + (b * b * b) + (c * c * c);
+ 
+      
+      if (sum === num) {
+        document.getElementById("result").innerHTML = num + " IS an Armstrong number";
+      } else {
+        document.getElementById("result").innerHTML = num + " is NOT an Armstrong number";
+      }
+    }
+</script>
+ 
+</body>
+</html>
