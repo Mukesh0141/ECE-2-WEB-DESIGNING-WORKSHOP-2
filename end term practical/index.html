@@ -71,7 +71,7 @@
   <h2>Armstrong Number Checker</h2>
  
   <label>Enter a number: </label>
-  <input type="number" id="num">
+  <input type="number" class="num">
   <button onclick="checkArmstrong()">Check</button>
  
   <h3 id="result"></h3>
@@ -79,7 +79,7 @@
  
 <script>
     function checkArmstrong() {
-      var num = Number(document.getElementById("num").value);
+      var num = Number(document.getElementsByClassName("num")[0].value);
  
       
       var a = Math.floor(num / 100);        
@@ -91,7 +91,7 @@
  
       
       if (sum === num) {
-        document.getElementById("result").innerHTML = num + " IS an Armstrong number";
+        document.getElementById("result").innerHTML = num + " is an Armstrong number";
       } else {
         document.getElementById("result").innerHTML = num + " is NOT an Armstrong number";
       }
